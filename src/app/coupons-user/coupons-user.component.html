@@ -1,0 +1,156 @@
+<br>
+<h1 class="text-center">Discount coupons to users form</h1>
+<br>
+<div class="row">
+    <div class="col-sm-4"></div>
+
+    <div class="col-sm-4">
+        <form [formGroup]="form" (ngSubmit)="save()">
+
+            <mat-form-field class="example-full-width">
+                <mat-label>Coupons Type*</mat-label>
+                <mat-select formControlName="coupon_type">
+                    <mat-option value="user">User</mat-option>
+                </mat-select>
+                <mat-error *ngIf="errorHandling('coupon_type', 'required')">
+                    Coupon type is required.
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+                <mat-label>Coupons Code*</mat-label>
+                <input matInput formControlName="coupon_code">
+                <mat-error *ngIf="errorHandling('coupon_code', 'required')">
+                    Coupon code is required.
+                </mat-error>
+            </mat-form-field>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-form-field>
+                        <mat-label>Start Date*</mat-label>
+                        <input matInput [matDatepicker]="picker1" formControlName="valid_from" [min]="today">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                        <mat-error *ngIf="errorHandling('valid_from', 'required')">
+                            Valid from is required.
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-6">
+                    <mat-form-field>
+                        <mat-label>End Date*</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="valid_to">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-error *ngIf="errorHandling('valid_to', 'required')">
+                            Valid to is required.
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <mat-form-field class="example-half-width">
+                <mat-label>Coupons Availability*</mat-label>
+                <mat-select formControlName="is_unlimited">
+                    <mat-option value="ultimate">Ultimate</mat-option>
+                </mat-select>
+                <mat-error *ngIf="errorHandling('is_unlimited', 'required')">
+                    Is unlimited is required.
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+                <mat-label>Leave a comment</mat-label>
+                <textarea matInput placeholder="type something..." formControlName="tnc"></textarea>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+                <mat-label>Coupons Status</mat-label>
+                <mat-select formControlName="is_active">
+                    <mat-option value="true">Active</mat-option>
+                    <mat-option value="false">InActive</mat-option>
+
+                </mat-select>
+            </mat-form-field>
+
+            <h3><strong>COUPON RULE:</strong> </h3>
+
+            <div class="card-body" formArrayName="rules">
+                <div class="row">
+                    <div class="col-12" *ngFor="let contact of rulesFormGroup.controls; let i = index;">
+                        <div [formGroupName]="i" class="row">
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Min amount</mat-label>
+                                        <input matInput formControlName="min_amount">
+
+                                    </mat-form-field>
+                                    <span class="text-danger" *ngIf="getRulesFormGroup(i).controls['min_amount'].touched && getRulesFormGroup(i).controls['min_amount'].hasError('min')">
+                                        Min amount 1 </span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Max amount</mat-label>
+                                        <input matInput formControlName="max_amount">
+
+                                    </mat-form-field>
+                                    <span class="text-danger" *ngIf="getRulesFormGroup(i).controls['max_amount'].touched && getRulesFormGroup(i).controls['max_amount'].hasError('max')">
+                                        Max amount 100 </span>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Discount Type</mat-label>
+                                        <mat-select formControlName="discount_type">
+                                            <mat-option value="percentage">Percentage</mat-option>
+                                        </mat-select>
+                                        <span class="text-danger" *ngIf="getRulesFormGroup(i).controls['discount_type'].touched && getRulesFormGroup(i).controls['discount_type'].hasError('required')">
+                                            Discount type is required! </span>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Discount Amount</mat-label>
+                                        <input matInput formControlName="discount">
+                                        <span class="text-danger" *ngIf="getRulesFormGroup(i).controls['discount'].touched && getRulesFormGroup(i).controls['discount'].hasError('required')">
+                                            Min amount is required! </span>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Max Discount Amount</mat-label>
+                                <input matInput formControlName="max_discount">
+                            </mat-form-field>
+
+                            <div class="form-group col-12 text-right">
+                                <button mat-raised-button color="warn" type="button" (click)="removeRules(i)"> Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button class="float-end" mat-raised-button color="primary" type="button" (click)="addRules()">
+                    <mat-icon aria-hidden="false" aria-label="Example home icon">add</mat-icon>Add More
+                </button>
+            </div>
+            <br>
+            <button type="submit" mat-raised-button color="primary">Save</button>
+
+        </form>
+
+    </div>
+    <div class="col-sm-4"></div>
+</div>
+<br><br>
+<p>{{this.form.value|json}}</p>
+<br><br>
